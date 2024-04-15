@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from utils import timeit
 from typing import List, Literal, Optional, Set, Tuple, Union
 
 import numpy as np
@@ -15,16 +16,10 @@ class Halma:
     BOARD_SIZE = 16
     def __init__(self, board: np.ndarray) -> None:
         self.board = board
-        self.player1 = []
-        self.player2 = []
-        for i in range(len(board)):
-            for j in range(len(board[i])):
-                pawn = board[i][j]
-                if pawn == 1:
-                    self.player1.append((i,j))
-                elif pawn == -1:
-                    self.player2.append((i,j))
-    
+        self.player1_camp = set(tuple(p) for p in np.dstack(np.where(board==1))[0])
+        self.player2_camp = set(tuple(p) for p in np.dstack(np.where(board==-1))[0])
+        
+        
     def _is_in_board(self, x, y):
         return (0 <= x < self.BOARD_SIZE) and (0 <= y < self.BOARD_SIZE)
 
@@ -48,9 +43,9 @@ class Halma:
     def get_pawn_moves(self, position, board) -> List[Move]:
         x, y = position
         moves_tup = []
-        for i in range(x-1, x+2):
-            for j in range(y-1, y+2):
-                if self._is_in_board(i, j):
+        for i in range(max(0, x - 1), min(self.BOARD_SIZE, x+2)):
+            for j in range(max(0, y-1), min(self.BOARD_SIZE, y+2)):
+                if (i, j) != (x,y):
                     if board[i][j] == 0:
                         moves_tup.append((i,j))
                     else:
@@ -59,11 +54,15 @@ class Halma:
                         moves_tup.extend(jump_moves)
         return [Move(position, dest)  for dest in moves_tup]
 
-    def get_availible_moves(self, player: Literal['1', '2'], board=None) -> List[Move]:
-        pawn_list = self.player1 if player == 1 else self.player2
+    def get_pawn_list(self, player: Literal['1', '2'], board: np.ndarray) -> np.ndarray:
+        player_pawn = player if player == 1 else -1
+        return np.dstack(np.where(board==player_pawn))[0]
+        
+    def get_available_moves(self, player: Literal['1', '2'], board: np.ndarray=None) -> List[Move]:
         moves = []
-        if not board:
+        if board is None:
             board = self.board
+        pawn_list = self.get_pawn_list(player, board)
 
         for pos in pawn_list:
             moves.extend(self.get_pawn_moves(pos, board))
@@ -75,17 +74,38 @@ class Halma:
         self.board[xd][yd] = self.board[xs][ys]
         self.board[xs][ys] = 0
 
-    def make_virtual_move(self, move):
+    def make_virtual_move(self, move, board):
         "returns a copy of board with made move"
         xs, ys = move.src 
         xd, yd = move.dest
-        board = self.board.copy()
+        board = board.copy()
         board[xd][yd] = board[xs][ys]
         board[xs][ys] = 0
         return board
+    
+    def check_win_condition(self, board=None) -> Literal['0', '1', '2']:
+        board = board if board is None else self.board
+        
+        player_1 = set(tuple(p) for p in self.get_pawn_list(1, board))
+        if player_1 == self.player2_camp:
+            return 1
+        
+        player_2 = set(tuple(p) for p in self.get_pawn_list(2, board))
+        if player_2 == self.player1_camp:
+            return 2
+        
+        return 0
 
+    def print_board(self):
+        print('='*16)
+        for i in range(len(self.board)):
+            for v in self.board[i]:
+                v = 2 if v ==-1  else v
+                print(v, end=' ')
+            print('')
+        
 def get_board():
-    board = np.zeros((16,16), dtype=int)
+    board = np.zeros((16,16), dtype=np.int8)
     def fill_player1():
         for i in range(5):
             board[0][i] = 1
@@ -117,4 +137,4 @@ def get_board():
 
 if __name__ == '__main__':
     halma = Halma(get_board())
-    
+    print(pawns:=halma.get_pawn_list(1, halma.board))
