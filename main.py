@@ -2,7 +2,11 @@ import numpy as np
 from halma import get_board
 import jump_moves
 
-board = np.zeros(shape=(16,16), dtype=np.int8)
-board[2,2] = 1
-result = jump_moves.jump_moves(board, (2, 0))
-print(result)
+rows = 16
+cols = 16
+
+matrix = [[1 + j - i  for j in range(cols)] for i in range(rows, 0, -1)]
+
+n = np.array(matrix)
+print(n)
+print(n.shape)

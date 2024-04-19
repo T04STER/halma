@@ -21,6 +21,8 @@ class GameState:
         self.player_1: Set[Tuple[int, int]] = player_1
         self.player_2: Set[Tuple[int, int]] = player_2
 
+    def __str__(self) -> int:
+        return str(self.player_1) + str(self.player_2)
 
     def make_move(self, move: Move):
         player = self.board[move.src]
@@ -164,7 +166,10 @@ class Halma:
         "returns a copy of gamestate after move"
         return game_state.new_state(move)
 
-    
+    def revert_move(self, move: Move):
+        self.game_state.make_move(Move(src=move.dest, dest=move.src))
+
+
     def check_win_condition(self, game_state:Optional[GameState]=None) -> Literal['0', '1', '2']:
         if not game_state:
             game_state = self.game_state

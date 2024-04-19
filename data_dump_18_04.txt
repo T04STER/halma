@@ -1,0 +1,49 @@
+(.venv) C:\Users\dawid\Documents\ai\lab2\halma>py game_tree.py
+         441 704 530 function calls (416 738 971 primitive calls) in 395.552 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000  397.799  397.799 <string>:1(<module>)
+ 12429465    2.720    0.000    2.720    0.000 <string>:2(__init__)
+ 24858910   21.704    0.000   43.698    0.000 copy.py:61(copy)
+ 12429465    6.549    0.000   10.717    0.000 game_tree.py:24(check_terminal_condition)
+ 12429465   11.348    0.000   71.423    0.000 game_tree.py:32(heurestic)
+12429465/10    7.908    0.000  397.799   39.780 game_tree.py:39(minmax)
+5621916/58916   13.875    0.000  397.244    0.007 game_tree.py:47(<genexpr>)
+  5571815    1.180    0.000    1.180    0.000 game_tree.py:57(<lambda>)
+6916074/50557   17.058    0.000  397.295    0.008 game_tree.py:60(<genexpr>)
+  6857640    1.489    0.000    1.489    0.000 game_tree.py:69(<lambda>)
+        1    0.000    0.000  397.799  397.799 game_tree.py:71(play)
+  2062165    2.521    0.000    2.521    0.000 halma.py:112(_get_neighbours)
+ 15691772   10.034    0.000   16.750    0.000 halma.py:122(<genexpr>)
+  2062165   56.739    0.000  100.261    0.000 halma.py:125(get_pawn_moves)
+   108535    2.240    0.000  103.366    0.001 halma.py:144(get_available_moves)        
+       10    0.000    0.000    0.000    0.000 halma.py:155(make_move)
+ 12429455    6.191    0.000  170.684    0.000 halma.py:158(make_virtual_move)
+ 12429465    4.168    0.000    4.168    0.000 halma.py:163(check_win_condition)
+ 12429455    2.913    0.000    2.913    0.000 halma.py:18(__init__)
+ 12429465   62.922    0.000   72.127    0.000 halma.py:23(make_move)
+ 12429455   21.816    0.000   81.286    0.000 halma.py:38(copy)
+ 12429455   11.081    0.000  164.493    0.000 halma.py:45(new_state)
+ 16497320    6.716    0.000    6.716    0.000 halma.py:67(_is_in_board)
+  8505798    3.816    0.000   13.637    0.000 halma.py:70(get_jump_moves)
+  8505798    4.663    0.000    4.663    0.000 halma.py:87(get_jump_dest)
+ 12429465   11.377    0.000   17.864    0.000 random.py:242(_randbelow_with_getrandbits)
+ 12429465   16.901    0.000   42.010    0.000 random.py:291(randrange)
+ 12429465    7.347    0.000   49.358    0.000 random.py:332(randint)
+ 37288395    7.246    0.000    7.246    0.000 {built-in method _operator.index}
+        1    0.000    0.000  397.800  397.800 {built-in method builtins.exec}
+50101/487    3.640    0.000  397.303    0.816 {built-in method builtins.max}
+58434/461    4.456    0.000  397.345    0.862 {built-in method builtins.min}
+  8505798    9.821    0.000    9.821    0.000 {built-in method jump_moves.jump_moves}
+ 12429465    4.142    0.000    4.142    0.000 {method 'add' of 'set' objects}
+  5123809    1.541    0.000    1.541    0.000 {method 'append' of 'list' objects}
+ 12429465    3.099    0.000    3.099    0.000 {method 'bit_length' of 'int' objects}
+ 12429455   12.859    0.000   12.859    0.000 {method 'copy' of 'numpy.ndarray' objects}
+ 24858910   16.041    0.000   16.041    0.000 {method 'copy' of 'set' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+ 10567963    3.028    0.000    3.028    0.000 {method 'extend' of 'list' objects}
+ 24858910    5.952    0.000    5.952    0.000 {method 'get' of 'dict' objects}
+ 15831433    3.387    0.000    3.387    0.000 {method 'getrandbits' of '_random.Random' objects}
+ 12429465    5.063    0.000    5.063    0.000 {method 'remove' of 'set' objects}
