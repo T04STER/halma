@@ -29,6 +29,7 @@ class GameTree:
             return float('-inf')
         return 0
 
+    @cache
     def heurestic(self, game_state: GameState) -> Number:
         """also checks win/lose condition (+inf, -inf)"""    
         end_game = self.check_terminal_condition(game_state)
@@ -86,4 +87,4 @@ class GameTree:
 if __name__ == '__main__':
     halma = Halma(get_board())
     gt = GameTree(halma)
-    cProfile.run('gt.play(depth=3, max_count=5)')
+    cProfile.run('gt.play(depth=4, max_count=1)')
