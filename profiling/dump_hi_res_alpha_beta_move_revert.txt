@@ -1,0 +1,39 @@
+Sat Apr 20 12:26:07 2024    profile_stats
+
+         23 218 655 function calls (22 302 317 primitive calls) in 34.598 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1       0.000050       0.000050      34.842569      34.842569 {built-in method builtins.exec}
+        1       0.000003       0.000003      34.842519      34.842519 <string>:1(<module>)
+        1       0.000096       0.000096      34.842516      34.842516 C:\Users\dawid\Documents\ai\lab2\halma\game_tree.py:186(play)
+ 916343/5       6.197585       0.000007      34.842392       6.968478 C:\Users\dawid\Documents\ai\lab2\halma\game_tree.py:79(alpha_beta_pruning)
+   902808       4.851045       0.000005      13.141274       0.000015 C:\Users\dawid\Documents\ai\lab2\halma\game_tree.py:39(heurestic)
+   902808       1.537620       0.000002       7.344586       0.000008 C:\Users\dawid\Documents\ai\lab2\.venv\Lib\site-packages\numpy\core\fromnumeric.py:2177(sum)
+   916338       0.570443       0.000001       5.802394       0.000006 C:\Users\dawid\Documents\ai\lab2\halma\halma.py:202(revert_move)
+   902808       1.969731       0.000002       5.468109       0.000006 C:\Users\dawid\Documents\ai\lab2\.venv\Lib\site-packages\numpy\core\fromnumeric.py:71(_wrapreduction)
+   916338       4.504126       0.000005       5.231951       0.000006 C:\Users\dawid\Documents\ai\lab2\halma\halma.py:44(revert_move)
+   916343       0.501368       0.000001       4.859766       0.000005 C:\Users\dawid\Documents\ai\lab2\halma\halma.py:194(make_move)
+   916343       3.697942       0.000004       4.358398       0.000005 C:\Users\dawid\Documents\ai\lab2\halma\halma.py:31(make_move)
+   902808       3.166487       0.000004       3.166487       0.000004 {method 'reduce' of 'numpy.ufunc' objects}
+  1819151       0.955340       0.000001       1.630260       0.000001 C:\Users\dawid\Documents\ai\lab2\halma\game_tree.py:31(check_terminal_condition)
+  1238642       1.235280       0.000001       1.459942       0.000001 {built-in method builtins.max}
+     6747       0.108579       0.000016       1.189910       0.000176 C:\Users\dawid\Documents\ai\lab2\halma\halma.py:102(get_available_moves)
+   128193       0.405121       0.000003       1.026554       0.000008 C:\Users\dawid\Documents\ai\lab2\halma\halma.py:89(get_pawn_moves)
+   594034       0.612556       0.000001       0.722140       0.000001 {built-in method builtins.min}
+  1832681       0.709859       0.000000       0.709859       0.000000 {method 'remove' of 'set' objects}
+  1832681       0.678421       0.000000       0.678421       0.000000 {method 'add' of 'set' objects}
+  1819151       0.674920       0.000000       0.674920       0.000000 C:\Users\dawid\Documents\ai\lab2\halma\halma.py:93(check_win_condition)
+   128193       0.376949       0.000003       0.376949       0.000003 {built-in method moves.get_pawn_moves}
+   902808       0.338858       0.000000       0.338858       0.000000 {built-in method builtins.isinstance}
+   902808       0.331891       0.000000       0.331891       0.000000 {method 'items' of 'dict' objects}
+    13535       0.228428       0.000017       0.298352       0.000022 C:\Users\dawid\Documents\ai\lab2\halma\halma.py:28(__hash__)
+   916343       0.273965       0.000000       0.273965       0.000000 <string>:2(__init__)
+  1238642       0.224662       0.000000       0.224662       0.000000 C:\Users\dawid\Documents\ai\lab2\halma\game_tree.py:103(<lambda>)
+   902808       0.212476       0.000000       0.212476       0.000000 C:\Users\dawid\Documents\ai\lab2\.venv\Lib\site-packages\numpy\core\fromnumeric.py:2172(_sum_dispatcher)
+   594034       0.109584       0.000000       0.109584       0.000000 C:\Users\dawid\Documents\ai\lab2\halma\game_tree.py:128(<lambda>)
+   128193       0.054778       0.000000       0.054778       0.000000 {method 'extend' of 'list' objects}
+    13535       0.053104       0.000004       0.053104       0.000004 {method 'flatten' of 'numpy.ndarray' objects}
+    13535       0.016820       0.000001       0.016820       0.000001 {built-in method builtins.hash}
+        1       0.000021       0.000021       0.000021       0.000021 {method 'disable' of '_lsprof.Profiler' objects}

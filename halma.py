@@ -1,7 +1,8 @@
 from copy import copy
 from dataclasses import dataclass
+import hashlib
 from typing import List, Literal, Optional, Set, Tuple, Union
-import jump_moves as c_util_jump
+import moves as c_util
 from functools import lru_cache
 
 import numpy as np
@@ -23,7 +24,10 @@ class GameState:
 
     def __str__(self) -> int:
         return str(self.player_1) + str(self.player_2)
-
+        
+    def __hash__(self):
+        return hash(tuple(self.board.flatten()))
+    
     def make_move(self, move: Move):
         player = self.board[move.src]
         self.board[move.src] = 0
@@ -35,7 +39,20 @@ class GameState:
             self.player_2.remove(move.src)
             self.player_2.add(move.dest)
         else:
-            raise ValueError("WTF??")
+            raise ValueError("Imposible...")
+    
+    def revert_move(self, move):
+        player = self.board[move.dest]
+        self.board[move.dest] = 0
+        self.board[move.src] = player
+        if player == 1:
+            self.player_1.remove(move.dest)
+            self.player_1.add(move.src)
+        elif player == -1:
+            self.player_2.remove(move.dest)
+            self.player_2.add(move.src)
+        else:
+            raise ValueError("Imposible...")
 
     def copy(self) -> 'GameState':
         return GameState(
@@ -69,8 +86,31 @@ class Halma:
     def _is_in_board(self, x, y):
         return (0 <= x < 16) and (0 <= y < 16)
 
+    def get_pawn_moves(self, position, board) -> List[Move]:
+        destinations = c_util.get_pawn_moves(board, position)
+        return [Move(position, dest)  for dest in destinations]
+
+    def check_win_condition(self, game_state:Optional[GameState]=None) -> Literal['0', '1', '2']:
+        if not game_state:
+            game_state = self.game_state
+        if game_state.player_1 == self.player2_camp:
+            return 1
+        if game_state.player_2 == self.player1_camp:
+            return 2
+        return 0
+
+    @lru_cache(4096)
+    def get_available_moves(self, player: Literal['1', '2'], game_state:Optional[GameState]=None) -> List[Move]:
+        moves = []
+        if game_state is None:
+            game_state = self.game_state
+        pawn_list = game_state.player_1 if player == 1 else game_state.player_2
+        for pos in pawn_list:
+            moves.extend(self.get_pawn_moves(pos, game_state.board))
+        return moves
+
     def get_jump_moves(self, pos, board:np.ndarray):
-        return c_util_jump.jump_moves(board, pos)
+        return c_util.jump_moves(board, pos)
     
     def get_jump_moves_py(self, pos, board:np.ndarray, visited:Set[Tuple[int, int]]=set()):
         """Deprecated due to c module"""
@@ -129,7 +169,9 @@ class Halma:
         }
         return neighbours
 
-    def get_pawn_moves(self, position, board) -> List[Move]:
+
+    def get_pawn_moves_py(self, position, board) -> List[Move]:
+        """Deprecated"""
         # TODO: add not outside camp lock
         pos_x, pos_y = position
         move_set = set()
@@ -146,17 +188,8 @@ class Halma:
     def get_pawn_list(self, player: Literal['1', '2'], board: np.ndarray) -> np.ndarray:
         player_pawn = player if player == 1 else -1
         return np.dstack(np.where(board==player_pawn))[0]
-        
-    def get_available_moves(self, player: Literal['1', '2'], game_state:Optional[GameState]=None) -> List[Move]:
-        moves = []
-        if game_state is None:
-            game_state = self.game_state
-        pawn_list = game_state.player_1 if player == 1 else game_state.player_2
+    
 
-        for pos in pawn_list:
-            moves.extend(self.get_pawn_moves(pos, game_state.board))
-
-        return  moves
 
     def make_move(self, move: Move):
         self.game_state.make_move(move)
@@ -167,29 +200,10 @@ class Halma:
         return game_state.new_state(move)
 
     def revert_move(self, move: Move):
-        self.game_state.make_move(Move(src=move.dest, dest=move.src))
+        self.game_state.revert_move(move)
 
 
-    def check_win_condition(self, game_state:Optional[GameState]=None) -> Literal['0', '1', '2']:
-        if not game_state:
-            game_state = self.game_state
 
-        if game_state.player_1 == self.player2_camp:
-            return 1
-        
-        if game_state.player_2 == self.player1_camp:
-            return 2
-        
-        return 0
-
-    def print_board(self):
-        print('='*16)
-        for i in range(len(self.game_state.board)):
-            for v in self.game_state.board[i]:
-                v = 2 if v ==-1  else v
-                print(v, end=' ')
-            print('')
-        
 def get_board():
     board = np.zeros((16,16), dtype=np.int8)
     def fill_player1():
@@ -223,43 +237,13 @@ def get_board():
 
 if __name__ == '__main__':
     board = np.zeros(shape=(16,16), dtype=np.int8)
-    board[2,2] = 1
-    board[2,3] = 1
+    board[0,0] = 1
+    board[1,1] = 1
     board[3,4] = 1
 
 
-    halma = Halma(get_board())
-    #print(len()
-    moves  = halma.get_pawn_moves((2,3), board=halma.game_state.board)
-    for move in moves:
-        print(move)
-    print('='*16)
-    dests = [move.dest for move in moves]
-    for i, r in enumerate(halma.game_state.board):
-        print(i, end=' ')
-    print('')
-    for i, r in enumerate(halma.game_state.board):
-        for j, v in enumerate(halma.game_state.board[i]):
-            v = 2 if v ==-1  else v
-            if (i,j) in dests:
-                v = 'x'
-            if (i,j) == (2, 3):
-                v = '+'
-            print(v, end=' ')
-        print('')
-
-    halma.make_move(moves[0])
-    moves  = halma.get_available_moves(1)
-    dests = [move.dest for move in moves]
-    for i, r in enumerate(halma.game_state.board):
-        print(i, end=' ')
-    print('')
-    for i, r in enumerate(halma.game_state.board):
-        for j, v in enumerate(halma.game_state.board[i]):
-            v = 2 if v ==-1  else v
-            if (i,j) in dests:
-                v = 'x'
-            if (i,j) == (2, 3):
-                v = '+'
-            print(v, end=' ')
-        print('')
+    halma = Halma(board)
+    positions  = halma.get_pawn_moves((0,0), halma.game_state.board)
+    print(halma.game_state.board)
+    for pos in positions:
+        print(pos)

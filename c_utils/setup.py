@@ -1,14 +1,14 @@
 from setuptools import setup, Extension
 import numpy as np
 
-jump_moves = Extension(
-    'jump_moves',
-    sources = ['jump_moves.cpp'],
+moves = Extension(
+    'moves',
+    sources = ['moves.cpp'],
     include_dirs=[np.get_include()]
 )
 setup(
-    name = 'JumpMovesGenerator',
+    name = 'MovesGenerator',
     version='1.0',
-    description = 'This is a package for generation of jump moves using DFS',
-    ext_modules = [jump_moves]
-    )
+    description = 'This is a package for moves generation of neighbouring jump moves using DFS',
+    ext_modules = [moves]
+)

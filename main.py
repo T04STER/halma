@@ -2,11 +2,7 @@ import numpy as np
 from halma import get_board
 import jump_moves
 
-rows = 16
-cols = 16
+BOARD_SCORE = np.array([[(1 + j - i) * 4  for j in range(16)] for i in range(16, 0, -1)])
 
-matrix = [[1 + j - i  for j in range(cols)] for i in range(rows, 0, -1)]
-
-n = np.array(matrix)
-print(n)
-print(n.shape)
+for i in BOARD_SCORE:
+    print(i)

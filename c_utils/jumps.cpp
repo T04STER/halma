@@ -1,4 +1,3 @@
-#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #pragma once
 #include "Python.h"
 #include <numpy/arrayobject.h>
@@ -11,8 +10,7 @@
 
 #define NUM_NEIGHBOURS  8
 
-
-std::vector<std::pair<int, int>> find_next_jumps(PyArrayObject *boardp, std::pair<int, int> pos, int len) {
+std::vector<std::pair<int, int>> find_next_jumps(PyArrayObject *boardp, const std::pair<int, int> &pos, const int &len) {
   int x = pos.first, y = pos.second; 
   int xt = x + 1, xt2 = x + 2;
   int xb = x - 1, xb2 = x - 2;
@@ -47,7 +45,7 @@ std::vector<std::pair<int, int>> find_next_jumps(PyArrayObject *boardp, std::pai
 }
 
 
-static void dfs_jump_search(PyArrayObject *boardp, PyObject *listp, std::pair<int, int> pos) {
+static void dfs_jump_search(PyArrayObject *boardp, PyObject *listp, const std::pair<int, int> &pos) {
   std::stack<std::pair<int, int>> stack;
   std::set<std::pair<int, int>> visited;
   stack.push(pos);
@@ -67,10 +65,31 @@ static void dfs_jump_search(PyArrayObject *boardp, PyObject *listp, std::pair<in
 
 }
 
+static void dfs_jump_search(PyArrayObject *boardp, std::set<std::pair<int, int>> *visitedp, const std::pair<int, int> &pos) {
+  std::stack<std::pair<int, int>> stack;
+  stack.push(pos);
+  while (!stack.empty()) {
+    std::pair<int, int> current = stack.top();
+    stack.pop();
+
+    if (visitedp->find(current) == visitedp->end()) {
+      visitedp->insert(current);
+      auto next_jumps = find_next_jumps(boardp, current, 16);
+      for (const auto &jump : next_jumps) {
+        stack.push(jump);
+      }
+    }
+  }
+
+}
+
+
+
 static PyObject* jump_moves(PyObject* self, PyObject* args){
   PyArrayObject *boardp;
   PyObject *positionp;
   PyObject *list = PyList_New(0);
+
 
   if (!PyArg_ParseTuple(args,"O!O", &PyArray_Type, &boardp, &positionp))
       return list;
@@ -93,22 +112,4 @@ static PyObject* jump_moves(PyObject* self, PyObject* args){
   dfs_jump_search(boardp, list, pos_tup);
 
   return list;
-}
-
-static PyMethodDef mainMethods[] = {
-    {"jump_moves", jump_moves, METH_VARARGS, "Evaluate jump moves"},
-    {NULL, NULL, 0, NULL}
-};
-
-static struct PyModuleDef jump_movesModule = {
-    PyModuleDef_HEAD_INIT,
-    "jump_moves",
-    "Evaluate jump moves from given position",
-    -1,
-    mainMethods
-};
-
-PyMODINIT_FUNC PyInit_jump_moves(void){
-    import_array();
-    return PyModule_Create(&jump_movesModule);
 }

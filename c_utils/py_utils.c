@@ -5,7 +5,7 @@
 #include <stdbool.h> 
 
 
-static void append_list(PyObject *listp, int x, int y) {
+static void append_list(PyObject *listp, const int &x, const int &y) {
   PyObject *tuplep = PyTuple_New(2);
   PyObject *x_obj = PyLong_FromLong((long)x);
   PyObject *y_obj = PyLong_FromLong((long)y);
