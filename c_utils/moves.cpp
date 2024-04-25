@@ -3,10 +3,11 @@
 #include "Python.h"
 #include <numpy/arrayobject.h>
 #include "py_utils.c"
-#include "board_utils.c"
+#include "board_utils.cpp"
 #include "jumps.cpp"
 #include <set>
-#include<iostream>
+#include <iostream>
+
 
 struct NeighboursOrJumpsTuple{
   // neighbours & possible jumps
@@ -15,7 +16,7 @@ struct NeighboursOrJumpsTuple{
 };
 
 
-NeighboursOrJumpsTuple get_neighbours(PyArrayObject *boardp, const std::pair<int, int> &pos, const int& len) {
+NeighboursOrJumpsTuple get_neighbours(PyArrayObject *boardp, const std::pair<int, int> &pos, const int& len, const int& player_flag_camp) {
   int x = pos.first, y = pos.second; 
   int xt = x + 1, xt2 = x + 2;
   int xb = x - 1, xb2 = x - 2;
@@ -39,12 +40,14 @@ NeighboursOrJumpsTuple get_neighbours(PyArrayObject *boardp, const std::pair<int
     auto neighbour = neighbours[i];
     if (is_on_board(neighbour.first, neighbour.second, len) ) {
       if (is_empty(boardp, neighbour.first, neighbour.second)) {
-        valid_neighbours.push_back(neighbour);
+        if (player_flag_camp == 0 || player_in_enemy_camp(neighbour, player_flag_camp) == player_flag_camp)
+          valid_neighbours.push_back(neighbour);
       }
       else {
         auto jump_dest = jumps[i];
         if (is_on_board(jump_dest.first, jump_dest.second, len) && is_empty(boardp, jump_dest.first, jump_dest.second)) {
-          possible_jumps.push_back(jump_dest);
+          if (player_flag_camp == 0 || player_in_enemy_camp(jump_dest, player_flag_camp) == player_flag_camp)
+            possible_jumps.push_back(jump_dest);
         }
       }
     }
@@ -66,17 +69,19 @@ static PyObject* get_pawn_moves(PyObject* self, PyObject* args) {
   int pos_x, pos_y;
   if (!PyArg_ParseTuple(positionp, "ii", &pos_x, &pos_y))
     return list;
-  
+
   const int len = get_dimensions_len(boardp);
 
-  auto va = (int)array_get(boardp, pos_x, pos_y);
+
 
   if (!is_on_board(pos_x, pos_y, len) || is_empty(boardp, pos_x, pos_y)) {
     return list;
   }
   const std::pair<int, int> pos_tup = {pos_x, pos_y};
+  int player = array_get(boardp, pos_x, pos_y);
+  int player_in_camp_flag = player_in_enemy_camp(pos_tup, player);
 
-  NeighboursOrJumpsTuple jumps_neighbour = get_neighbours(boardp, pos_tup, len);
+  NeighboursOrJumpsTuple jumps_neighbour = get_neighbours(boardp, pos_tup, len, player_in_camp_flag);
   std::set<std::pair<int, int>> visited;
   
   for (const auto &neighbour: jumps_neighbour.neighbour) {
@@ -84,7 +89,7 @@ static PyObject* get_pawn_moves(PyObject* self, PyObject* args) {
   }
   
   for (const auto &jump: jumps_neighbour.jumps_destinations) {
-    dfs_jump_search(boardp, &visited, jump);
+    dfs_jump_search(boardp, &visited, jump, player_in_camp_flag);
   }
 
   for (const auto &pair : visited) {

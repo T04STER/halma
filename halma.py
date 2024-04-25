@@ -172,7 +172,6 @@ class Halma:
 
     def get_pawn_moves_py(self, position, board) -> List[Move]:
         """Deprecated"""
-        # TODO: add not outside camp lock
         pos_x, pos_y = position
         move_set = set()
         possition_list = self._get_neighbours(pos_x, pos_y)

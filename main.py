@@ -1,8 +1,16 @@
+import time
 import numpy as np
 from halma import get_board
-import jump_moves
+from game_tree import BOARD_SCORE, GameTree
+from halma import *
 
-BOARD_SCORE = np.array([[(1 + j - i) * 4  for j in range(16)] for i in range(16, 0, -1)])
 
-for i in BOARD_SCORE:
-    print(i)
+
+if __name__ == '__main__':
+    halma = Halma(get_board())
+    gt = GameTree(halma)
+        
+    st=time.time()
+    gt.play(depth=3, max_count=300)
+    print(f"Elapsed: {time.time()-st}")
+    print(gt.halma.game_state.board)
