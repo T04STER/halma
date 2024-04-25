@@ -95,7 +95,7 @@ static PyObject* get_pawn_moves(PyObject* self, PyObject* args) {
   for (const auto &pair : visited) {
     append_list(list, pair.first, pair.second);
   }
-
+  
   return list;
 }
 

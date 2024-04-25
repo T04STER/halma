@@ -10,7 +10,6 @@ from typing import Tuple
 from concurrent import futures
 import numpy as np
 from halma import *
-from utils import timeit
 
 
 BOARD_SCORE = np.array([[(1 + j - i) for j in range(16)] for i in range(16, 0, -1)])
@@ -242,10 +241,8 @@ if __name__ == '__main__':
     gt = GameTree(halma)
     
     st=time.time()
-    gt.play(depth=3, max_count=300)
+    gt.play(depth=4, max_count=2)
     print(f"Elapsed: {time.time()-st}")
-    print(gt.halma.game_state.board)
-    #cProfile.run('gt.play(depth=3, max_count=5)')
     # stats = pstats.Stats('profile_stats')
 
 

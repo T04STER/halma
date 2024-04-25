@@ -2,7 +2,6 @@
 #pragma once
 #include "Python.h"
 #include <numpy/arrayobject.h>
-#include <stdbool.h> 
 
 
 static void append_list(PyObject *listp, const int &x, const int &y) {

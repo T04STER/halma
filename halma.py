@@ -109,11 +109,21 @@ class Halma:
             moves.extend(self.get_pawn_moves(pos, game_state.board))
         return moves
 
+    def get_available_moves_py(self, player: Literal['1', '2'], game_state:Optional[GameState]=None):
+        """deprecated used due to c++ module,to benchmark"""
+        moves = []
+        if game_state is None:
+            game_state = self.game_state
+        pawn_list = game_state.player_1 if player == 1 else game_state.player_2
+        for pos in pawn_list:
+            moves.extend(self.get_pawn_moves_py(pos, game_state.board))
+        return moves
+
     def get_jump_moves(self, pos, board:np.ndarray):
         return c_util.jump_moves(board, pos)
     
     def get_jump_moves_py(self, pos, board:np.ndarray, visited:Set[Tuple[int, int]]=set()):
-        """Deprecated due to c module"""
+        """Deprecated due to c++ module"""
         x, y = pos
         if not self._is_in_board(x, y) or board[x][y] != 0:
             return []
