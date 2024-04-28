@@ -1,6 +1,7 @@
 from copy import copy
 from dataclasses import dataclass
 import hashlib
+import random
 from typing import List, Literal, Optional, Set, Tuple, Union
 import moves as c_util
 from functools import lru_cache
@@ -32,6 +33,7 @@ class GameState:
         player = self.board[move.src]
         self.board[move.src] = 0
         self.board[move.dest] = player
+
         if player == 1:
             self.player_1.remove(move.src)
             self.player_1.add(move.dest)
@@ -40,7 +42,8 @@ class GameState:
             self.player_2.add(move.dest)
         else:
             raise ValueError("Imposible...")
-    
+
+
     def revert_move(self, move):
         player = self.board[move.dest]
         self.board[move.dest] = 0
@@ -179,6 +182,10 @@ class Halma:
         }
         return neighbours
 
+    def make_random_move(self, player: Literal['1', '2']):
+        moves = self.get_available_moves(player, self.game_state)
+        move = random.choice(moves)
+        self.make_move(move)
 
     def get_pawn_moves_py(self, position, board) -> List[Move]:
         """Deprecated"""
@@ -244,15 +251,3 @@ def get_board():
 
     return board
 
-if __name__ == '__main__':
-    board = np.zeros(shape=(16,16), dtype=np.int8)
-    board[0,0] = 1
-    board[1,1] = 1
-    board[3,4] = 1
-
-
-    halma = Halma(board)
-    positions  = halma.get_pawn_moves((0,0), halma.game_state.board)
-    print(halma.game_state.board)
-    for pos in positions:
-        print(pos)

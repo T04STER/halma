@@ -56,7 +56,7 @@ int player_in_enemy_camp(std::pair<int, int> pos, int player) {
         || (pos_x == 2 && pos_y > 3)
     ) 
       return 0;
-    return 1;
+    return -1;
   }
   else {
     if ((pos_x < 11)

@@ -83,7 +83,6 @@ static PyObject* get_pawn_moves(PyObject* self, PyObject* args) {
 
   NeighboursOrJumpsTuple jumps_neighbour = get_neighbours(boardp, pos_tup, len, player_in_camp_flag);
   std::set<std::pair<int, int>> visited;
-  
   for (const auto &neighbour: jumps_neighbour.neighbour) {
     visited.insert(neighbour);
   }
