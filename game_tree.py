@@ -140,7 +140,6 @@ class GameTree:
             return min_result, best_move
        
     def alpha_beta(self, depth: int, maximizing_agent: bool, alpha = min_inf, beta = max_inf):
-        self.visited_nodes += 1
         gs = self.halma.game_state
         terminal = self.check_terminal_condition(gs)
         if terminal != 0:
@@ -184,7 +183,6 @@ class GameTree:
             return value
         
     def alpha_beta_dispatcher(self, depth: int, maximizing_agent: bool, alpha = min_inf, beta = max_inf):
-        self.visited_nodes += 1
         gs = self.halma.game_state
         terminal = self.check_terminal_condition(gs)
         if terminal != 0:
