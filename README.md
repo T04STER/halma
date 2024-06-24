@@ -15,8 +15,3 @@ Halma is a strategic board game designed for two players. The objective of the g
 4. Create venv and then build c++ library as a module using python c_utils\setup.py build install
 
 
-## Usage
-
-1. Run the game: `python main.py`
-2. Follow the on-screen instructions to play the game.
-3. Enjoy!
